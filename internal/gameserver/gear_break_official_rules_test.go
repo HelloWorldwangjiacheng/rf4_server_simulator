@@ -141,3 +141,57 @@ func TestReportedReelBreakKeepsFishHooked(t *testing.T) {
 		t.Fatalf("断轮后应拦截抛投，rigBrokenReelGUID=%q", got)
 	}
 }
+
+// TestReelBreakBumpsReelBreaksCounter 验证断轮会记到 reel_breaks 计数器上。
+//
+// 断轮路径一律置 KeepFight（鱼仍咬钩，等 17/9/17/10 收尾），而 17/9 的收尾
+// 分派第一支就是 KeepFight；计数器若写在 case 分支里永远不命中——这是统计页
+// 「损坏的渔轮」长期为 0 的直接原因。本用例锁死「计数必须在 switch 之前判定」。
+func TestReelBreakBumpsReelBreaksCounter(t *testing.T) {
+	t.Parallel()
+	srv, db := newRigTestServer(t)
+	ctx := context.Background()
+	const uid = int64(1000001)
+
+	rod, err := srv.CreateItem(ctx, uid, "spin_10003_S60UL", "backpack", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	reel, err := srv.CreateItem(ctx, uid, "spin_5820", "backpack", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	line, err := srv.CreateItem(ctx, uid, "mono_15249", "backpack", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sess := newProbeSess(srv)
+	mountGearForTest(t, srv, sess, rod.GUID, reel.GUID)
+	mountGearForTest(t, srv, sess, rod.GUID, line.GUID)
+
+	st := srv.stateFor(uid)
+	st.mu.Lock()
+	st.GearGuid = rod.GUID
+	st.Pending = &RolledFish{FishGUID: "44444444444444444444444444444444", Species: "perch", WeightG: 500}
+	st.Hooked = true
+	st.CastActive = true
+	st.Resolved = false
+	st.mu.Unlock()
+
+	tree := rigRequestTree(t, proto.Guid(rod.GUID), proto.Guid(reel.GUID), proto.U32(2), proto.Null())
+	body, ok := hDynamicRodBreak(&Ctx{Sess: sess, Main: 17, Sub: 9, Tree: tree,
+		DecodeOK: true, ExpectResponse: true, Log: logging.Discard()})
+	if !ok || len(body) == 0 {
+		t.Fatal("17/9 断轮未处理")
+	}
+
+	var reels int64
+	if err := db.SQL.QueryRowContext(ctx,
+		`SELECT COALESCE((SELECT value FROM player_counters WHERE uid=? AND key='reel_breaks'),0)`,
+		uid).Scan(&reels); err != nil {
+		t.Fatal(err)
+	}
+	if reels != 1 {
+		t.Fatalf("断轮后 reel_breaks=%d，期望 1", reels)
+	}
+}

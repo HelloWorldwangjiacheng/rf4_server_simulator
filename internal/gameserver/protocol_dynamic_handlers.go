@@ -354,6 +354,13 @@ func hDynamicRodBreak(ctx *Ctx) ([]byte, bool) {
 				}
 			}
 			st.mu.Unlock()
+			// 断轮计数必须在 switch 之前判定：官服断轮一律 KeepFight（鱼仍挂钩，
+			// 等 17/9/17/10 收尾），而 switch 第一支就是 KeepFight，写在 case 里
+			// 永远不会命中——这正是「损坏的渔轮」长期为 0 的原因之一。
+			// 摩擦片磨穿只置 ReelDamaged，本体没坏，不计入损坏的渔轮。
+			if outcome.ReelBroken {
+				srv.bumpFishingCounter(ctx.Sess.Userid, "reel_breaks")
+			}
 			switch {
 			case outcome.KeepFight:
 				// 鱼仍咬钩，不记跑鱼。
