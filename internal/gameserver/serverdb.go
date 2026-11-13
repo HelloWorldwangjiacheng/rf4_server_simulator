@@ -151,12 +151,17 @@ func knownRealFightCurveRows() [][19]float64 {
 // buildFightItems 构造 4/22 物品同步元素：full 返回竿和线，非 full 返回钩。
 // 14/11 以钩强 f0 作为负载比基准，因此非 full 分支不能返回竿树。
 func (s *Server) buildFightItems(ctx context.Context, uid int64, full bool, gears ...string) ([]*proto.Value, error) {
-	st := s.stateFor(uid)
-	st.mu.Lock()
-	gear := st.GearGuid
-	st.mu.Unlock()
+	var gear string
 	if len(gears) > 0 {
 		gear = gears[0]
+	}
+	if gear == "" {
+		// 缺省兜底路径才取钓鱼状态；这里保留 stateFor 的 resume 语义
+		// （登录恢复/重连后借钓鱼请求重排 timer）。
+		st := s.stateFor(uid)
+		st.mu.Lock()
+		gear = st.GearGuid
+		st.mu.Unlock()
 	}
 	if gear == "" {
 		// 无手持竿：取背包第一件竿
@@ -169,6 +174,16 @@ func (s *Server) buildFightItems(ctx context.Context, uid int64, full bool, gear
 			}
 		}
 	}
+	if gear == "" {
+		return nil, nil
+	}
+	return s.buildFightItemsForGear(ctx, uid, gear, full)
+}
+
+// buildFightItemsForGear 按指定竿构建 4/22 元素，不触碰钓鱼状态
+// （无 stateFor/resume 副作用）——结算、推送等非钓鱼请求上下文专用。
+// 多竿场景调用方必须传本次结算/中鱼的那根竿，不能用"手持竿"兜底。
+func (s *Server) buildFightItemsForGear(ctx context.Context, uid int64, gear string, full bool) ([]*proto.Value, error) {
 	if gear == "" {
 		return nil, nil
 	}
@@ -200,10 +215,31 @@ func (s *Server) buildFightItems(ctx context.Context, uid int64, full bool, gear
 	return out, nil
 }
 
-// buildMountedHookTree 返回线末端钩的完整实例树。
-// 优先使用钩物品行；拟饵出厂钩没有独立行时，从拟饵子对象中取同 GUID 的树。
+// buildMountedHookTree 返回线末端钩的完整实例树（4/22 推送形状）。
+// 路亚：钩为拟饵内置（出厂钩或实装钩）时返回拟饵整树——官方 429B 路亚中鱼帧
+// 是拟饵容器形状（拟饵本体+钩），客户端路亚钩组实例按拟饵容器构造，发裸钩会
+// 让钩组实例缺失、保持力 ×0.05 秒脱。独立钩行（海钓串钩单钩等）保持裸钩形状。
+// 注意：钩物理/强度链路走 mountedHookSubTree，不要用本函数读钩定义。
 func (s *Server) buildMountedHookTree(ctx context.Context, gearGUID string) *proto.Value {
 	hookGUID := s.mountedHookGuid(ctx, gearGUID)
+	if hookGUID == "" {
+		return nil
+	}
+	if lureGUID := s.mountedLureGUID(ctx, gearGUID); lureGUID != "" &&
+		s.lureContainsHook(ctx, lureGUID, hookGUID) {
+		if lureRow, err := s.DB.GetItemByGUID(ctx, lureGUID); err == nil && lureRow != nil {
+			if tree, terr := s.ItemToTree(ctx, lureRow); terr == nil && tree != nil {
+				return tree
+			}
+		}
+	}
+	return s.mountedHookSubTree(ctx, gearGUID, hookGUID)
+}
+
+// mountedHookSubTree 返回线末端钩的单钩树：优先使用钩物品行；
+// 拟饵出厂钩没有独立行时，从拟饵子对象中取同 GUID 的钩对象。
+// 钩物理（mountedHookDef 强度/钩号）依赖这里的顶层是钩本体，不是拟饵容器。
+func (s *Server) mountedHookSubTree(ctx context.Context, gearGUID, hookGUID string) *proto.Value {
 	if hookGUID == "" {
 		return nil
 	}
@@ -235,6 +271,28 @@ func (s *Server) buildMountedHookTree(ctx context.Context, gearGUID string) *pro
 		}
 	}
 	return nil
+}
+
+// lureContainsHook 判断钩 GUID 是否为拟饵 gpoaffnjbdo 数组中的内置钩
+// （出厂钩与实装钩同判）。
+func (s *Server) lureContainsHook(ctx context.Context, lureGUID, hookGUID string) bool {
+	if lureGUID == "" || hookGUID == "" {
+		return false
+	}
+	row, err := s.DB.GetItemByGUID(ctx, lureGUID)
+	if err != nil || row == nil {
+		return false
+	}
+	fields, err := FieldsFromJSON(row.FieldsJSON)
+	if err != nil || len(fields) == 0 || fields[0].Val == nil || fields[0].Val.Kind != proto.KindArgs {
+		return false
+	}
+	for _, g := range lureHookItemGUIDs(fields[0].Val.Items) {
+		if strings.EqualFold(g, hookGUID) {
+			return true
+		}
+	}
+	return false
 }
 
 // ---- 新玩家初始化 ----

@@ -250,15 +250,25 @@ func TestLureFactoryHooksHaveStrength(t *testing.T) {
 	st.mu.Lock()
 	st.GearGuid = rod.GUID
 	st.mu.Unlock()
+	// 官方路亚中鱼钩帧是拟饵容器形状（拟饵本体+钩，429B 同构），
+	// 发裸钩会让客户端钩组实例缺失、保持力 ×0.05 秒脱。
 	items, err := srv.buildFightItems(ctx, 1000001, false)
 	if err != nil || len(items) != 1 {
-		t.Fatalf("14/11 4/22 应推 1 个钩对象: n=%d err=%v", len(items), err)
+		t.Fatalf("14/11 4/22 应推 1 个拟饵整树: n=%d err=%v", len(items), err)
 	}
-	if items[0].Class != "agedjipcnpe" || items[0].TypeID != 131 {
-		t.Fatalf("14/11 4/22 类型=%s/%d，期望 agedjipcnpe/131", items[0].Class, items[0].TypeID)
+	if items[0].Class != "ioombppcnlh" || items[0].TypeID != 141 {
+		t.Fatalf("14/11 4/22 类型=%s/%d，期望 ioombppcnlh/141", items[0].Class, items[0].TypeID)
 	}
-	hookStrength := float64(proto.F32FromBits(uint32(u64Of(items[0].Field(0).Num))))
-	if hookStrength <= 0 {
-		t.Fatalf("14/11 推送钩强=%f，期望 >0", hookStrength)
+	if len(items[0].Fields) == 0 || items[0].Fields[0].Val == nil || len(items[0].Fields[0].Val.Items) == 0 {
+		t.Fatal("14/11 4/22 拟饵整树缺出厂钩")
+	}
+	for i, hook := range items[0].Fields[0].Val.Items {
+		if hook == nil || hook.Class != "agedjipcnpe" {
+			t.Fatalf("14/11 4/22 出厂钩[%d] 形状错误", i)
+		}
+		hookStrength := float64(proto.F32FromBits(uint32(u64Of(hook.Field(0).Num))))
+		if hookStrength <= 0 {
+			t.Fatalf("14/11 推送出厂钩[%d] 强=%f，期望 >0", i, hookStrength)
+		}
 	}
 }

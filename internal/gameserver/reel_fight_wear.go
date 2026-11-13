@@ -678,7 +678,9 @@ func (s *Server) settleFightReelWearState(ctx context.Context, st *FishState, ui
 			guids = append(guids, w.leaderGUID)
 		}
 		for _, sess := range s.sessionsForUID(uid) {
-			sess.Push4_22Items(guids)
+			// 多竿：本次磨损的竿是 w.rodGUID（可能非手持竿），
+			// 拟饵树/竿树都按它构建，extras 只补它没有的轮/前导。
+			sess.Push4_22FightSync(w.rodGUID, guids)
 		}
 	}
 }

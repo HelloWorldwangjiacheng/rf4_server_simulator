@@ -148,8 +148,9 @@ func TestFishingLoopFull(t *testing.T) {
 		t.Fatalf("27.f8 拉力应>0（随体重缩放）: %v", pull)
 	}
 
-	// 14/11 刺中（应触发 4/22 单钩推送）
+	// 14/11 刺中（触发两帧 4/22：先单钩推送，再全树运行位同步）
 	fc.SendRequest(203, 14, 11)
+	waitPushCmd(t, fc, 4, 22, 3*time.Second)
 	waitPushCmd(t, fc, 4, 22, 3*time.Second)
 
 	// 14/8 只是持续遥测，不应重建竿线或鱼实体。

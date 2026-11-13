@@ -1368,6 +1368,18 @@ func hFishingHooked(ctx *Ctx) ([]byte, bool) {
 		// 挂竿位四钓法通用（官方抓包沉底/浮钓/海钓/路亚中鱼钩 flags 均含 1024）。
 		ctx.Sess.Push4_22Hook(true, gear)
 	}
+	// 中鱼即进搏鱼态：客户端搏鱼 ctor 一次性读取全部挂载态并锁定整场，
+	// 竿/线/轮/前导的运行位必须当刻可达——只等结算再推对秒脱来说已经晚了
+	// （官方搏鱼期每 2s 全树帧同口径）。紧随钩帧发一次全树运行位同步；
+	// extras 取受力链组件（轮/前导/丝锁/铅芯），竿线由全量分支覆盖。
+	fightExtras := make([]string, 0, 4)
+	ids := srv.rigGearIDs(srv.dbCtx(), ctx.Sess.Userid, gear)
+	for _, g := range []string{ids.ReelGUID, ids.LeaderGUID, ids.LeadcoreGUID, ids.ConnectorGUID} {
+		if g != "" {
+			fightExtras = append(fightExtras, g)
+		}
+	}
+	ctx.Sess.Push4_22FightSync(gear, fightExtras)
 	if announce {
 		srv.notifyFishHooked(ctx.Sess, hookedFish, gear)
 	}

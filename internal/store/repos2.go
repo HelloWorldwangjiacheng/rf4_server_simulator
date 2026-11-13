@@ -514,6 +514,43 @@ func (d *DB) GetItemDef(ctx context.Context, numericID int64) (*ItemDef, error) 
 	return def, nil
 }
 
+// ItemDefCategories 批量按 numeric_id 取品类（4/22 搏鱼推送热路径专用）。
+// 树重建一次查询拿全量，调用方禁止逐对象单查；查询不到的 id 不在返回 map 里。
+func (d *DB) ItemDefCategories(ctx context.Context, numericIDs []int64) (map[int64]int64, error) {
+	out := make(map[int64]int64, len(numericIDs))
+	if len(numericIDs) == 0 {
+		return out, nil
+	}
+	const chunk = 500 // SQLite 变量上限余量
+	for start := 0; start < len(numericIDs); start += chunk {
+		end := start + chunk
+		if end > len(numericIDs) {
+			end = len(numericIDs)
+		}
+		part := numericIDs[start:end]
+		marks := make([]string, len(part))
+		qargs := make([]interface{}, len(part))
+		for i, id := range part {
+			marks[i] = "?"
+			qargs[i] = id
+		}
+		rows, err := d.SQL.QueryContext(ctx,
+			`SELECT numeric_id, COALESCE(category,0) FROM item_def WHERE numeric_id IN (`+
+				strings.Join(marks, ",")+`)`, qargs...)
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var id, cat int64
+			if err := rows.Scan(&id, &cat); err == nil {
+				out[id] = cat
+			}
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 // GetItemDefByItemID 按 systemID 取定义。
 func (d *DB) GetItemDefByItemID(ctx context.Context, itemID string) (*ItemDef, error) {
 	row := d.SQL.QueryRowContext(ctx, `
