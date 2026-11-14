@@ -65,6 +65,9 @@
 - [rf4almanac 重量数据整理与可用性分析（2026-11-08）](analysis-rf4almanac-weight-2026-11-08.md)；
   抓取与许可声明见该文「抓取与许可声明」一节。
 - [鱼口配置叠加/覆盖关系调查（2026-11-10）](后台配置对发鱼流程影响的调查.md)。
+- [路亚秒脱钩归因分析（2026-11-12）](路亚秒脱钩归因分析-2026-11-12.md)：模拟器脱钩
+  间隔双峰签名 × 官方 lure2 抓包运行位对照的证据源；结论已正式化为
+  specs/changes/lure-fight-mount-flags/spec.md。
 - [升级礼物卡片机制（完整还原）](LEVEL_UP_GIFT_CARDS.md)。
 - [入水证据官方报文核验与浮钓顺流修复方案（2026-11-13）](analysis-inwater-evidence-packet-verification-2026-11-13.md)：
   六份官方 pcap 全量解码 14/7 f5 位序；浮钓顺流/下沉与 14/3 入水证据修复

@@ -704,7 +704,7 @@ func (s *Server) mountedHookDef(ctx context.Context, rodGUID string) (*store.Ite
 			return def, row.Durability
 		}
 	}
-	tree := s.buildMountedHookTree(ctx, rodGUID)
+	tree := s.mountedHookSubTree(ctx, rodGUID, hookGUID)
 	if tree == nil {
 		return nil, 1
 	}
