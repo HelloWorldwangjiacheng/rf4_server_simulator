@@ -32,6 +32,10 @@ a{color:var(--accent)}
 .tabs button:hover{color:var(--text)}
 .tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
 .health{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);white-space:nowrap}
+.lang-switch{display:flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;margin-left:14px}
+.lang-switch a{color:var(--muted);text-decoration:none;padding:2px 7px;border-radius:6px;border:1px solid transparent}
+.lang-switch a:hover{color:var(--text)}
+.lang-switch a[aria-current=true]{color:var(--text);background:var(--surface-3);border-color:var(--line-strong)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
 .dot.ok{background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
 .dot.warn{background:var(--warn);box-shadow:0 0 0 3px var(--warn-soft)}
@@ -428,6 +432,7 @@ body.in-admin #backHome{display:inline-flex}
     <button id="tab-admin" role="tab" aria-selected="false" onclick="showView('admin')">管理后台</button>
   </nav>
   <div class="health" title="服务器状态"><i class="dot" id="dot"></i><span id="healthText">正在连接…</span></div>
+  <nav id="lang-switch" class="lang-switch"></nav>
 </header>
 
 <main class="main">
@@ -638,6 +643,374 @@ body.in-admin #backHome{display:inline-flex}
 
 </main>
 
+<!--RF4-I18N-START-->
+<script>window.RF4_LANG="zh";</script>
+<script>
+// 生成物：不要手改。源文件 tools/panel_en.py，生成命令 tools/gen_panel_i18n.py。
+// 口径：只翻「用户看得到的字」（文本节点 + title/placeholder/aria-label/alt）；
+// 日志正文、玩家数据不在字典里，因而保留中文。zh 页不做任何替换。
+(function () {
+  var L = window.RF4_LANG === "en" ? "en" : "zh";
+  var MAP = {
+  "/admin/ · 本页": "/admin/ · this page",
+  "1 · 先确认「游戏本体路径」": "1 · Confirm the game path first",
+  "2 · 点「开始游戏」": "2 · Click \"Start game\"",
+  "3 · 连本地服务器还是官方": "3 · Local server or official",
+  "4 · 管理后台能做什么": "4 · What the admin console does",
+  "5 · 出问题了看哪里": "5 · Where to look when something breaks",
+  "6 · 存档与备份": "6 · Save data and backups",
+  "GitHub 发布页": "Releases on GitHub",
+  "RF4 本地服务器": "RF4 Local Server",
+  "· 来源：": "· source:",
+  "»": "»",
+  "、": ", ",
+  "。": ".",
+  "「": "\"",
+  "「让游戏连到本地服务器」里选本地，游戏登录时会连到这台电脑；想回官方服就切回官方，然后重新登录游戏。切换只改本机 hosts，不改游戏文件。": "Under \"Make the game connect to the local server\", pick local and game sign-in connects to this PC; to go back to the official server, switch back and sign in to the game again. Switching only changes this PC's hosts file, not the game files.",
+  "」": "\"",
+  "」「": ", ",
+  "」没有正常运行。请在组件表中查看对应进程日志。": "\" is not running properly. Check that process's log in the component table.",
+  "一切就绪，可以开始游戏了。已稳定运行": "Everything is ready; you can start the game. Running stable for",
+  "下载（国内加速）": "Download (mirror)",
+  "两个组件都在运行后，再启动游戏本体。「只启动游戏客户端」不会启动或重启服务。": "Once both components are running, start the game itself. \"Launch game client only\" does not start or restart the services.",
+  "从 GitHub 下载": "Download from GitHub",
+  "件 · 档案": "items · profiles",
+  "你正在使用最新版本。": "You are using the latest version.",
+  "使用说明": "How to use",
+  "例如 D:\\Games\\RF4\\rf4_x64.exe": "e.g. D:\\Games\\RF4\\rf4_x64.exe",
+  "保存": "Save",
+  "保存失败": "Save failed",
+  "修改角色和背包、调整商店价格、设置各水域出什么鱼、给玩家发邮件。": "Edit characters and inventory, adjust shop prices, choose which fish each water spawns, and send mail to players.",
+  "停止": "Stop",
+  "停止中": "Stopping",
+  "停止后正在游戏中的玩家会掉线。确定停止吗？": "Stopping drops players who are in game. Stop anyway?",
+  "停止服务器": "Stop server",
+  "先填密码": "Enter the password first",
+  "全部完成": "All done",
+  "全部运行中": "All running",
+  "准备中": "Preparing",
+  "分": "min",
+  "分钟": "min",
+  "切换失败": "Switch failed",
+  "切换游戏连接失败：": "Failed to switch the game connection: ",
+  "刚刚启动": "Started just now",
+  "初始化失败": "Initialization failed",
+  "刷新": "Refresh",
+  "加速下载": "Mirrored download",
+  "去看诊断": "Open diagnostics",
+  "发布页（国内加速）": "Releases (mirror)",
+  "只启动游戏客户端": "Launch game client only",
+  "只看警告和错误": "Warnings and errors only",
+  "可调参数": "Tunables",
+  "右侧「运行日志」显示所选组件的标准输出。重启服务会让正在游戏的玩家掉线。": "\"Runtime logs\" on the right show the standard output of the selected component. Restarting the services drops players who are in game.",
+  "后台信息": "Console info",
+  "后台账号": "Console account",
+  "启动": "Start",
+  "启动中": "Starting",
+  "启动后会在后台检查新版本，不影响正常使用。": "New versions are checked in the background after start; this does not affect normal use.",
+  "启动后才能进入游戏。": "Start it before entering the game.",
+  "启动器可能已经退出。请重新打开「启动服务器」，再刷新本页面。": "The launcher may have exited. Open \"Start server\" again, then refresh this page.",
+  "启动失败": "Launch failed",
+  "启动服务器": "Start server",
+  "告诉我游戏装在哪里": "Tell me where the game is installed",
+  "处理游戏登录，把游戏连接转给游戏逻辑": "Handles game sign-in and passes the connection to game logic",
+  "复制全部": "Copy all",
+  "复制失败，请手动选中日志复制。": "Copy failed; select the logs and copy them manually.",
+  "复制筛选结果": "Copy filtered",
+  "天": "d",
+  "存档初始化完成后会自动打开。": "It opens automatically once save initialization finishes.",
+  "官方下载": "Official download",
+  "官方服务器": "Official server",
+  "密码": "Password",
+  "小技巧：在文件夹里按住 Shift 右键点击 rf4_x64.exe，选「复制为路径」。启动时会附带": "Tip: in the folder, hold Shift and right-click rf4_x64.exe, then choose \"Copy as path\". The game starts with",
+  "小时": "h",
+  "已保存游戏位置。": "Game location saved.",
+  "已停止": "Stopped",
+  "已加载": "Loaded",
+  "已崩溃": "Crashed",
+  "已是最新": "Up to date",
+  "已登录": "Signed in",
+  "已设置": "Set",
+  "已设置好：游戏登录时会连到这台电脑上的服务器。想回官方服务器玩，切回来并重新登录游戏即可。": "All set: game sign-in connects to the server on this PC. To play on the official server, switch back and sign in to the game again.",
+  "已读取": "Read",
+  "已运行": "Uptime",
+  "已连接": "Connected",
+  "库未就绪": "Database not ready",
+  "开始前确认这三件事": "Check these three things first",
+  "开始游戏": "Start game",
+  "异常": "Error",
+  "打开管理后台": "Open admin console",
+  "找到游戏安装目录下的": "In the game install folder, find",
+  "抢先体验预览版": "Try the preview",
+  "操作": "Actions",
+  "操作失败": "Action failed",
+  "日志": "Logs",
+  "日志读取失败": "Failed to read logs",
+  "暂无": "None",
+  "暂时读不到版本信息。": "Can't read version info right now.",
+  "暂时连不上更新服务器，显示的是上次检查到的版本。稍后会自动重试。": "Can't reach the update server right now; showing the version from the last check. It retries automatically.",
+  "暂时连不上更新服务器，稍后会自动重试。不影响正常使用。": "Can't reach the update server right now; it retries automatically. This does not affect normal use.",
+  "更多": "More",
+  "更新服务已连接。": "Update server connected.",
+  "最新发布": "Latest release",
+  "最新预览版": "Latest preview",
+  "最近一次出错：": "Last error:",
+  "有新版本": "Update available",
+  "有新版本可以下载。": "A new version is available.",
+  "有组件异常": "A component has an error",
+  "服务器会在后台自动启动，出问题时也会自动重启。": "The server starts in the background, and restarts itself if something goes wrong.",
+  "服务器工作台": "Server workbench",
+  "服务器已停止": "Server stopped",
+  "服务器操作": "Server actions",
+  "服务器有部分功能没有运行": "Some server components are not running",
+  "服务器正在启动": "The server is starting",
+  "服务器状态": "Server status",
+  "服务器运行中": "Server running",
+  "服务地址": "Service address",
+  "未就绪": "Not ready",
+  "未登录": "Signed out",
+  "未知": "Unknown",
+  "未设置": "Not set",
+  "未读取": "Not read",
+  "本地服务器": "Local server",
+  "本地服务器在运行": "Local server is running",
+  "本地构建": "Local build",
+  "本项目免费开源，作者未收取任何费用，谨防被骗，四个QQ交流群：379233540、225460820、1128152596、1134665746": "This project is free and open source; the author charges nothing. Beware of scams. Four QQ groups: 379233540, 225460820, 1128152596, 1134665746.",
+  "构建": "Build",
+  "构建：": "Build: ",
+  "查看日志": "View logs",
+  "档案 / 物品": "Profiles / items",
+  "检查中": "Checking",
+  "检查更新失败": "Update check failed",
+  "正在准备": "Preparing",
+  "正在启动": "Starting",
+  "正在启动游戏…": "Launching the game…",
+  "正在导入游戏资料并初始化存档，通常不超过一分钟。": "Importing game data and initializing saves; usually under a minute.",
+  "正在检查更新": "Checking for updates",
+  "正在读取版本信息…": "Reading version info…",
+  "正在读取状态…": "Reading status…",
+  "正在读日志…": "Reading logs…",
+  "正在读进程列表…": "Reading the process list…",
+  "正在运行": "Current",
+  "正在连接": "Connecting",
+  "正在连接…": "Connecting…",
+  "正在连接更新服务器…": "Connecting to the update server…",
+  "正在连接本地服务器…": "Connecting to the local server…",
+  "正在重试…": "Retrying…",
+  "正式版": "stable release",
+  "没有可复制的日志。": "No logs to copy.",
+  "没有警告或错误。": "No warnings or errors.",
+  "没能启动游戏：": "Could not launch the game: ",
+  "游戏已启动，窗口出现可能需要几秒钟。": "The game has launched; its window may take a few seconds to appear.",
+  "游戏目前会连到官方服务器。想玩本地服务器，请在下方第 3 步切换。": "The game connects to the official server now. To play on the local server, switch in step 3 below.",
+  "游戏连接到": "The game connects to",
+  "游戏逻辑": "Game logic",
+  "游戏逻辑和登录与连接进程的标准输出。": "Standard output of the game logic and login & connection processes.",
+  "点顶栏「管理后台」：改角色等级/货币/背包、调整每个商店的覆盖价、设置各水域出什么鱼、改钓鱼手感参数、给玩家发邮件、看审计日志。账号是": "Click \"Admin console\" in the top bar to edit character level/currency/inventory, set per-shop override prices, choose which fish each water spawns, tune fishing feel, send mail to players and read the audit log. The account is",
+  "照着做就行": "Just follow these steps",
+  "版本与更新": "Version & updates",
+  "物品目录": "Item catalog",
+  "状态": "Status",
+  "状态未知": "Unknown status",
+  "状态读取中断": "Status read interrupted",
+  "状态连接中断，已保留当前后台页面。": "Status connection lost; the current admin page is kept.",
+  "玩家数据库": "Player database",
+  "现在游戏会连到官方服务器。选「本地服务器」后，重新登录游戏即可连到这台电脑。": "The game connects to the official server now. Choose \"Local server\", then sign in to the game again to connect to this PC.",
+  "登录": "Sign in",
+  "登录与连接": "Login & connection",
+  "登录后才能改玩家数据、保存设置。不登录也能看总览、商店、参数、水域这些页面，玩家管理会拦着。": "Signing in is required to edit player data and save settings. You can still browse dashboard, shop, tunables and waters without signing in; player management stays locked.",
+  "登录失败（HTTP ": "Sign-in failed (HTTP ",
+  "的": "of",
+  "看看更新了什么": "See what changed",
+  "磁盘程序已替换，重启后生效": "The program on disk was replaced; restart to apply it",
+  "稍等几秒，准备好后这里会变成绿色。": "Give it a few seconds; this turns green when ready.",
+  "稍等片刻，状态会自动刷新。": "One moment — the status refreshes automatically.",
+  "等待检查": "Waiting to check",
+  "管理后台": "Admin console",
+  "管理后台准备中": "Admin console is starting",
+  "管理后台没能启动": "The admin console failed to start",
+  "管理后台登录": "Admin console sign-in",
+  "管理后台里可以直接编辑": "It can be edited directly in the admin console",
+  "组件": "Component",
+  "自动重启": "Auto-restart",
+  "自己编译的版本没有构建时间戳，跳过更新检测，不影响使用。": "A self-built version has no build timestamp, so update checks are skipped. This does not affect use.",
+  "获取失败": "Fetch failed",
+  "行 · 内存里保留最近 800 行": "lines · keeps the latest 800 lines in memory",
+  "见 config.yaml": "See config.yaml",
+  "角色存档": "Character saves",
+  "角色数据都在本目录的": "Character data lives in",
+  "让游戏连到本地服务器": "Make the game connect to the local server",
+  "诊断与日志": "Diagnostics & logs",
+  "请先填写 rf4_x64.exe 的完整路径。": "Enter the full path to rf4_x64.exe first.",
+  "读不到": "Unavailable",
+  "读不到当前设置。选一个选项即可，切换后需要重新登录游戏。": "Can't read the current setting. Just pick an option; sign in to the game again after switching.",
+  "读不到进程列表：控制面板和服务器可能都没在跑。": "Can't read the process list: neither the control panel nor the server may be running.",
+  "读取中": "Loading",
+  "读取中…": "Loading…",
+  "读取失败": "Failed to read",
+  "账号": "Account",
+  "账号密码在 config.yaml 的 admin 段": "The account and password are in the admin section of config.yaml",
+  "路径。路径不对就在下面点「更换路径」重新选一次；选对了「开始游戏」按钮才会亮。": ". If it is wrong, click \"Change path\" below and pick it again; only then does the \"Start game\" button light up.",
+  "跳过检测": "Checks skipped",
+  "跳过这个版本": "Skip this version",
+  "运行中": "Running",
+  "运行日志": "Runtime logs",
+  "返回首页": "Back to home",
+  "还差一步：在下方填写游戏位置，就能从这里直接开始游戏。": "One step left: set the game location below and you can start the game from here.",
+  "这个组件还没有输出。": "This component has no output yet.",
+  "这些数字是服务器库的只读统计，每 30 秒随状态一起刷新；要改内容请进管理后台。": "These numbers are read-only stats from the server database, refreshed with the status every 30 seconds; go to the admin console to change anything.",
+  "进程还没起来，稍等几秒。": "The processes are not up yet; give it a few seconds.",
+  "连不上": "Can't connect",
+  "连不上管理后台": "Can't reach the admin console",
+  "连接上本地服务器后会自动打开管理后台。": "The admin console opens automatically once the local server is reachable.",
+  "连接不上": "Not connected",
+  "连接不上本地服务器": "Can't connect to the local server",
+  "连接中断": "Connection lost",
+  "选「本地服务器」后，游戏登录时会连到这台电脑。想回官方服务器玩，切回来并重新登录游戏即可。": "After choosing \"Local server\", game sign-in goes to this PC. To play on the official server again, switch back and sign in to the game once more.",
+  "选「本地服务器」后，游戏登录时会连到这台电脑；想回官方服务器玩，切回来即可。切换后需要重新登录游戏。": "After choosing \"Local server\", game sign-in goes to this PC; to play on the official server again, switch back. Sign in to the game again after switching.",
+  "邮件 / 审计": "Mail / audit",
+  "部分运行": "Partly running",
+  "重启": "Restart",
+  "重启会暂时停止服务，正在游戏中的玩家会掉线。确定重启吗？": "Restarting briefly stops the service and drops players who are in game. Restart anyway?",
+  "重启服务器": "Restart server",
+  "重试": "Retry",
+  "重试中": "Retrying",
+  "钓鱼、背包、任务等玩法都在这里计算": "Fishing, inventory, quests and other gameplay are all computed here",
+  "页面": "Page",
+  "项": "items",
+  "预览版": "preview",
+  "首次启动，正在准备数据": "First launch; preparing data",
+  "首页": "Home",
+  "首页最上面会显示它读到的": "The top of the home page shows the path it read:",
+  "！": "!",
+  "（": " (",
+  "）": ")",
+  "，": ", ",
+  "，复制这个文件就是完整备份；换版本前先备份它。": "in this folder; copying that file is a complete backup. Back it up before switching versions.",
+  "，密码在": ", the password is in",
+  "，把它的完整路径粘贴到这里。只需设置一次。": ", then paste its full path here. You only need to do this once.",
+  "：": ":",
+  "；": "; ",
+  "？": "?"
+};
+  var RULES = [
+    ["^当前版本过旧，建议尽快升级到 (.+)$", "This version is old; upgrade to {0} soon"],
+    ["^新版本 (.+) 可以下载了$", "Version {0} is now available"],
+    ["^已复制 (.+?) 行$", "Copied {0} lines"],
+    ["^已完成 (.+?)/3$", "{0}/3 done"],
+    ["^有新的(.+?)可以下载；当前版本也可以继续使用。$", "A new {0} is available; you can keep using the current version."],
+    ["^检查于 (.+)$", "Checked {0}"],
+    ["^「(.+)」没有正常运行。请在组件表中查看对应进程日志。$", "Component not running properly: {0}. Check its log in the component table."],
+    ["^已稳定运行 (.+)$", "Running stable for {0}"],
+    ["^(.+?) 分钟$", "{0} min"],
+    ["^(.+?) 小时$", "{0} h"],
+    ["^(.+?) 天$", "{0} d"],
+    ["^(.+?) 项$", "{0} items"],
+    ["^(.+?) 件 · 档案$", "{0} items · profiles"],
+    ["^(.+?) 行 · 内存里保留最近 800 行$", "{0} lines · keeps the latest 800 lines in memory"],
+    ["^(.+?) 小时 (.+?) 分$", "{0} h {1} min"],
+    ["^(.+?) 天 (.+?) 小时$", "{0} d {1} h"],
+    ["^登录失败（HTTP (.+?)）$", "Sign-in failed (HTTP {0})"],
+    ["^(.+?)/(.+?) 运行中$", "{0}/{1} running"],
+    ["^最近一次出错：(.+)$", "Last error: {0}"],
+    ["^已运行 (.+)$", "Running for {0}"]
+  ];
+  if (L !== "en") {
+    window.__rf4Tr = function (s) { return s; };
+    return;
+  }
+  var compiled = RULES.map(function (r) { return [new RegExp(r[0]), r[1]]; });
+  var PUNCT = { "。": ".", "、": ", ", "，": ", ", "：": ": ", "；": "; ", "！": "!", "？": "?", "（": " (", "）": ")", "「": '"', "」": '"' };
+
+  function fill(tpl, m) {
+    return tpl.replace(/\{(\d+)\}/g, function (all, i) {
+      var v = m[Number(i) + 1];
+      return v === undefined ? all : v;
+    });
+  }
+  var CJKRE = /[\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]/;
+  var KEYS_BY_LEN = Object.keys(MAP).sort(function (a, b) { return b.length - a.length; });
+  // 并列短语（「游戏逻辑」「登录与连接」）等整句里夹的 UI 片段：整条命中之后再补翻一遍，
+  // 免得一句里残留中文。只对「已经被判为 UI 文案」的字符串生效，不碰日志正文与玩家数据。
+  function polysh(s) {
+    if (!CJKRE.test(s)) { return s; }
+    for (var i = 0; i < KEYS_BY_LEN.length; i++) {
+      var k = KEYS_BY_LEN[i];
+      if (k.length > 1 && s.indexOf(k) >= 0) { s = s.split(k).join(MAP[k]); }
+    }
+    return s.split("」「").join(", ").split("「").join("").split("」").join("");
+  }
+  function tr(s) {
+    if (!s) { return s; }
+    var t = String(s), trimmed = t.trim();
+    if (!trimmed) { return s; }
+    if (Object.prototype.hasOwnProperty.call(MAP, trimmed)) {
+      var v = MAP[trimmed];
+      return polysh(t.replace(trimmed, function () { return v; }));
+    }
+    for (var i = 0; i < compiled.length; i++) {
+      var m = compiled[i][0].exec(trimmed);
+      if (m) { return polysh(t.replace(trimmed, function () { return fill(compiled[i][1], m); })); }
+    }
+    if (Object.prototype.hasOwnProperty.call(PUNCT, trimmed)) {
+      return t.replace(trimmed, function () { return PUNCT[trimmed]; });
+    }
+    return s;
+  }
+  window.__rf4Tr = tr;
+
+  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1 };
+  var ATTRS = ["title", "placeholder", "aria-label", "alt"];
+  function walk(root) {
+    if (!root || !document.createTreeWalker) { return; }
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) { return NodeFilter.FILTER_REJECT; }
+        var p = n.parentElement;
+        if (!p || SKIP[p.tagName]) { return NodeFilter.FILTER_REJECT; }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [];
+    while (w.nextNode()) { nodes.push(w.currentNode); }
+    for (var i = 0; i < nodes.length; i++) {
+      var next = tr(nodes[i].nodeValue);
+      if (next !== nodes[i].nodeValue) { nodes[i].nodeValue = next; }
+    }
+    if (root.querySelectorAll) {
+      var els = root.querySelectorAll("*");
+      for (var j = 0; j < els.length; j++) {
+        for (var a = 0; a < ATTRS.length; a++) {
+          if (els[j].hasAttribute(ATTRS[a])) {
+            var cur = els[j].getAttribute(ATTRS[a]), nx = tr(cur);
+            if (nx !== cur) { els[j].setAttribute(ATTRS[a], nx); }
+          }
+        }
+      }
+    }
+  }
+  function kick() {
+    walk(document.body);
+    if (document.title) { document.title = tr(document.title); }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", kick);
+  } else {
+    kick();
+  }
+  if (typeof MutationObserver === "function") {
+    var queued = false;
+    var obs = new MutationObserver(function () {
+      if (queued) { return; }
+      queued = true;
+      requestAnimationFrame(function () { queued = false; walk(document.body); });
+    });
+    obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+    window.__rf4PanelLangObserver = obs;
+  }
+})();
+</script>
+<!--RF4-I18N-END-->
 <script>
 const NAMES = ["gameserver","gateway"];
 const SERVICE_LABELS = {gameserver:"游戏逻辑", gateway:"登录与连接"};

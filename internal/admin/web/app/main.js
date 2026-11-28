@@ -2,6 +2,7 @@
 // 视觉与结构以演示页 RF4-管理工作台.html v177 为准：
 // body 直接是两列网格（aside.rail + main），页面顶部是照片横幅 hero，下面是 .work 双栏。
 import { h, $, api, post, icon, getToken, setToken, onAuth, route, render, navigate, toast, errText, parseHash, setHeroStats, loginDialog, reloadPage } from './core.js';
+import { tr, translateDom, startLangObserver } from './i18n.js';
 
 // 保留各页说明作为链接提示；常驻导航只展示图标与页名。
 const NAV = [
@@ -394,6 +395,8 @@ async function boot() {
       h('div', { id: 'updateSlot' }),
       pageFoot(),
       h('div', { id: 'noticeSlot' }, notice || '')));
+  translateDom(document.body);
+  startLangObserver();
   updateBanner((me && me.update) || (stats && stats.update));
   render();
   warmAllLater();

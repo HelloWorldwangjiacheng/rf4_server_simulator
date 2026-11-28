@@ -1,0 +1,332 @@
+{
+  "generated_at": "2026-11-28T11:41:12+08:00",
+  "baseline": "tools/baseline_ids.json",
+  "count": 36,
+  "mismatch": 9,
+  "results": [
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/me",
+      "expected": 401,
+      "observed": 401,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/dashboard",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/tunables",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/players",
+      "expected": 401,
+      "observed": 401,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/players/detail",
+      "expected": 401,
+      "observed": 401,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/players/records",
+      "expected": 401,
+      "observed": 401,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/catalog/items",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/catalog/groups",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/stores",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/stores/items",
+      "expected": 400,
+      "observed": 400,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/areas",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/config",
+      "expected": 400,
+      "observed": 400,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/pool",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/spawn_mode",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/bite_mode",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/hooks/profiles",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/bait/prefs",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/bait/items",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/bait/categories",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/sea-now",
+      "expected": 404,
+      "observed": 404,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/sea-zone-latest",
+      "expected": 404,
+      "observed": 404,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/sea-zones",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/fish/zones",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/audit",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/about",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/api/release-notes",
+      "expected": 404,
+      "observed": 404,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "8080",
+      "method": "GET",
+      "path": "/",
+      "expected": 200,
+      "observed": 200,
+      "match": true,
+      "error": ""
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/admin/",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/admin",
+      "expected": 307,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/status",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/overview",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/logs",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/game/config",
+      "expected": 405,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/game/launch",
+      "expected": 405,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "port": "9500",
+      "method": "GET",
+      "path": "/api/hosts",
+      "expected": 200,
+      "observed": null,
+      "match": false,
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    }
+  ]
+}
