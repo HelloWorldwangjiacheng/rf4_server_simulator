@@ -1,4 +1,4 @@
-// 生成物：不要手改。源文件 locales/zh.json + locales/en.json + tools/en_translations.py
+// 生成物：不要手改。源文件 locales/zh.json + locales/en.json + tools/gen_admin_i18n.py
 // 源文件即 locales/zh.json（zh 原文）与 locales/en.json（en 译文）；运行期缺 en 时回退 zh 原文。
 export const ZH = {
   "admin.audit.admin": "管理后台里做过的每一次修改（最近 200 条）。",
@@ -886,6 +886,9 @@ export const ZH = {
   "admin.shell.name_3": "输入名称开始搜索",
   "admin.shell.none": "没有改动",
   "admin.shell.none_2": "没有找到",
+  "admin.shell.notice": "本项目免费开源，作者未收取任何费用，谨防被骗，四个QQ交流群：379233540、225460820、1128152596、1134665746",
+  "admin.shell.notice_groups": "379233540、225460820、1128152596、1134665746",
+  "admin.shell.notice_intro": "本项目免费开源，作者未收取任何费用，谨防被骗，四个QQ交流群：",
   "admin.shell.ok": "确定",
   "admin.shell.online": "在线玩家",
   "admin.shell.overview": "总览",
@@ -2496,6 +2499,9 @@ export const EN = {
   "admin.shell.name_3": "Type a name to search",
   "admin.shell.none": "No changes",
   "admin.shell.none_2": "Nothing found",
+  "admin.shell.notice": "This project is free and open source. The author charges nothing, so beware of scams. Four QQ groups: 379233540, 225460820, 1128152596, 1134665746",
+  "admin.shell.notice_groups": "379233540, 225460820, 1128152596, 1134665746",
+  "admin.shell.notice_intro": "This project is free and open source. The author charges nothing, so beware of scams. Four QQ groups:",
   "admin.shell.ok": "OK",
   "admin.shell.online": "Players online",
   "admin.shell.overview": "Overview",
@@ -3271,7 +3277,6 @@ export const TEMPLATES = [
   ["^\u5403 (?<a>.+)$", "Eats {a}"],
   ["^\u4e0d\u5403 (?<a>.+)$", "Does not eat {a}"],
   ["^\uff08\u73b0\u5728\uff1a(?<v>.+)\uff09$", "(now {v})"],
-  ["^\uff08\u73b0\u5728\uff1a(?<v>.+)\uff09", "(now {v})"],
   ["^\u6536\u4ef6\u4eba\uff1a\\s*(?<v>.+)$", "Recipient: {v}"],
   ["^\u5f53\u524d\u9884\u8bbe\uff1a(?<v>.+?)\u3002\u9884\u8bbe\u8986\u76d6\u524d\u516d\u9879\uff1b\u6b22\u4e50\u65f6\u5149\u72ec\u7acb\u3002$", "Current preset: {v}. A preset covers the first six rules; happy hour is separate."],
   ["^\u5706\u5f62\uff0c\u534a\u5f84 (?<r>[\\d.]+) \u7c73$", "Circle, radius {r} m"],

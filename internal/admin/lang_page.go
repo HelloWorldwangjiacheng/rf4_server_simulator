@@ -46,7 +46,7 @@ func langSwitchHTML(lang string) string {
 			`<a href="?lang=zh"` + zhAttr + ` aria-current="true">中文</a>` +
 			`<a href="?lang=en"` + enAttr + `>EN</a></nav>`
 	}
-	return `<nav id="lang-switch" class="lang-switch" aria-label="语言 / Language">` +
+	return `<nav id="lang-switch" class="lang-switch" aria-label="Language">` +
 		`<a href="?lang=zh"` + zhAttr + `>ZH</a>` +
 		`<a href="?lang=en"` + enAttr + ` aria-current="true">EN</a></nav>`
 }

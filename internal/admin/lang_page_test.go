@@ -4,9 +4,12 @@ import (
 	"io/fs"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"strings"
 	"testing"
 )
+
+var cjkRE = regexp.MustCompile(`[\x{3000}-\x{303f}\x{3400}-\x{4dbf}\x{4e00}-\x{9fff}\x{f900}-\x{faff}\x{ff00}-\x{ffef}]`)
 
 // 语言口径：?lang= > cookie lang > Accept-Language > 默认 zh。
 func TestLangFromRequestPrecedence(t *testing.T) {
@@ -81,8 +84,13 @@ func TestRenderIndexShellByLang(t *testing.T) {
 	if !strings.Contains(zh, `window.__LANG__="zh";`) {
 		t.Fatal("zh 页面壳缺少 window.__LANG__=\"zh\"")
 	}
-	if nav := navBlock(t, zh); !strings.Contains(nav, `aria-current="true">中文</a>`) {
-		t.Fatalf("zh 切换控件应把中文标为当前语言，实际：%s", nav)
+	zhNav := navBlock(t, zh)
+	if !strings.Contains(zhNav, `aria-current="true">中文</a>`) {
+		t.Fatalf("zh 切换控件应把中文标为当前语言，实际：%s", zhNav)
+	}
+	// zh 页的 aria-label 与修复前一致（中文页不出现英文译名以外的改动）。
+	if !strings.Contains(zhNav, `aria-label="语言 / Language"`) {
+		t.Fatalf("zh 切换控件的 aria-label 应与修复前一致，实际：%s", zhNav)
 	}
 
 	en := string(renderIndex(raw, "en"))
@@ -101,6 +109,16 @@ func TestRenderIndexShellByLang(t *testing.T) {
 	}
 	if strings.Contains(nav, "中文") {
 		t.Fatalf("en 切换控件不应出现中文，实际：%s", nav)
+	}
+	// 用户看得见的字里零 CJK：切换控件整体（含 aria-label）不允许中文。
+	if !strings.Contains(nav, `aria-label="Language"`) {
+		t.Fatalf("en 切换控件的 aria-label 应为英文，实际：%s", nav)
+	}
+	if cjkRE.MatchString(nav) {
+		t.Fatalf("en 切换控件仍含 CJK，实际：%s", nav)
+	}
+	if cjkRE.MatchString(strings.SplitN(strings.SplitN(en, "<title>", 2)[1], "</title>", 2)[0]) {
+		t.Fatalf("en 页面壳 title 仍含 CJK")
 	}
 	// window.__LANG__ 必须早于 main.js 执行。
 	iLang := strings.Index(en, `window.__LANG__="en";`)
