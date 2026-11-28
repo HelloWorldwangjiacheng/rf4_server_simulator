@@ -97,7 +97,7 @@ def rule_source(name="tools/panel_en.py", rev=None):
     import subprocess
     root = os.path.dirname(HERE)
     out = subprocess.run(["git", "-C", root, "show", "%s:%s" % (rev, name)],
-                         capture_output=True, text=True)
+                         capture_output=True, text=True, encoding="utf-8", errors="replace")
     if out.returncode != 0:
         raise RuntimeError("git show %s:%s 失败：%s" % (rev, name, out.stderr.strip()))
     ns = {}

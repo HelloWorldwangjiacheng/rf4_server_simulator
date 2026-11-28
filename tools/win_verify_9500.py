@@ -380,7 +380,7 @@ def main():
         log("---- 只靠 cookie 的英文页（无 URL 参数）----")
         ck = render(a.url + "/", ("lang", "en"), port)
         ck_hits = [ln for ln in ck["ui"].splitlines() if ln.strip() and CJK.search(ln)]
-        add("cookie-en-render", ck_hits == 0 and ck.get("lang") == "en",
+        add("cookie-en-render", len(ck_hits) == 0 and ck.get("lang") == "en",
             "UI CJK hits: %d, RF4_LANG=%r" % (len(ck_hits), ck.get("lang")))
 
         p = en.get("probe") or {}
