@@ -59,7 +59,7 @@ curl.exe -s http://127.0.0.1:9500/api/status
 ```
 
 看到 `200` 和一段 JSON 就是起来了。9500 被占用的话先 `netstat -ano | findstr :9500`。
-（与 `README_WINDOWS.md` 第 3 节完全一致。）
+（`launcher.exe` 和上面两条就绪检查的命令、判读与 `README_WINDOWS.md` 第 3 节一致；复制 `config.yaml` 这一步是本分支新增的——`README_WINDOWS.md` 假设你手上已有 `config.yaml`。）
 
 ---
 
