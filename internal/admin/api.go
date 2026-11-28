@@ -50,6 +50,9 @@ type Server struct {
 
 	// 可选图标包按 Server 实例缓存；缺包或坏包保持 404 降级。
 	icons iconArchive
+
+	// 内嵌前端根；handleIndexPage 用它渲染语言页面壳（i18n）。
+	webFS fs.FS
 }
 
 type plog struct{ l logger }
@@ -65,7 +68,7 @@ const releaseNotesFilename = "发布说明.md"
 // NewServer 构建管理后台（webFS 为内嵌前端，nil 时只有 API）。
 // 运行时指令写入共享 SQLite 队列，由 gameserver 轮询消费。
 func NewServer(cfg config.Admin, db *store.DB, log logger, webFS fs.FS) *Server {
-	s := &Server{cfg: cfg, db: db, log: &plog{l: log}, jwtKey: []byte(cfg.JWTSecret)}
+	s := &Server{cfg: cfg, db: db, log: &plog{l: log}, jwtKey: []byte(cfg.JWTSecret), webFS: webFS}
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/login", s.handleLogin)
 
@@ -132,6 +135,9 @@ func NewServer(cfg config.Admin, db *store.DB, log logger, webFS fs.FS) *Server 
 	// 物品与鱼种图标同理由 ref/ 运行时加载（见 item_icons.go）。
 	mux.Handle("GET /icons/", http.HandlerFunc(s.handleIcons))
 	if webFS != nil {
+		// 页面壳按语言改写（?lang= / cookie lang / Accept-Language），其余静态资源照旧。
+		mux.HandleFunc("GET /{$}", s.handleIndexPage)
+		mux.HandleFunc("GET /index.html", s.handleIndexPage)
 		mux.Handle("/", http.FileServer(http.FS(webFS)))
 	}
 	s.mux = mux

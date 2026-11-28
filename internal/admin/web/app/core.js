@@ -1,4 +1,6 @@
 // RF4 管理后台 · 核心：DOM 构建、请求、路由、提示、弹窗、表单模型。
+// i18n：文本节点在进入 DOM 时就按当前语言取值（en 缺值回退 zh）。
+import { tr, translateDom } from './i18n.js';
 // 页面模块只依赖这里导出的东西，不直接碰全局状态。
 
 // ---------- DOM ----------
@@ -8,7 +10,7 @@ export function h(tag, attrs, ...children) {
     for (const [k, v] of Object.entries(attrs)) {
       if (v === undefined || v === null || v === false) continue;
       if (k === 'class') el.className = v;
-      else if (k === 'text') el.textContent = v;
+      else if (k === 'text') el.textContent = tr(v);
       else if (k === 'html') el.innerHTML = v;
       else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
       else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
@@ -24,7 +26,7 @@ function append(el, children) {
   for (const c of children) {
     if (c === null || c === undefined || c === false) continue;
     if (Array.isArray(c)) append(el, c);
-    else el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    else el.append(c instanceof Node ? c : document.createTextNode(tr(String(c))));
   }
 }
 export const $ = (sel, root = document) => root.querySelector(sel);
@@ -824,7 +826,7 @@ export async function render() {
     const kids = Array.isArray(node) ? node.filter(Boolean) : [node];
     // 演示页即使没有二级页签也留一个 #tabs 占位（hero 与 .work 之间的 18px 留白）。
     if (!kids.some((n) => n && n.id === 'tabs')) kids.splice(1, 0, h('div', { id: 'tabs' }));
-    const swap = () => { if (renderID !== id) return; root.replaceChildren(...kids); root.inert = false; window.scrollTo(0, 0); };
+    const swap = () => { if (renderID !== id) return; root.replaceChildren(...kids); translateDom(root); root.inert = false; window.scrollTo(0, 0); };
     const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (typeof document.startViewTransition === 'function' && !reduce) {
       // 支持 View Transitions 的浏览器用一次 180ms 交叉淡入，避免硬切。
