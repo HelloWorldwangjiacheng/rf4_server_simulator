@@ -9,22 +9,25 @@
 覆盖检查（不依赖脆弱的 JS 语法解析）：
   取 panel.html 里所有 CJK 词块（按标点/空白切分），排除 <style> 与注释区；
   每块都要能在「字典值 + 规则模式」里找到，否则报缺译。
-  真正的「页面渲染后还剩几个中文」由 tools/check_panel_tr.py 用 node 实测。
+  真正的「页面渲染后还剩几个中文」由 tools/win_verify_9500.py 在浏览器里实测；
+  本机没浏览器时可用 tools/check_panel_tr.py 做静态近似（纯 Python，不需要 node）。
 
-用法：
-  python3 tools/gen_panel_i18n.py            # 检查 + 写入
-  python3 tools/gen_panel_i18n.py --check    # 只检查，不写文件
-退出码：0 = 覆盖齐全；1 = 有缺译；2 = 结构问题。
+用法（仓库根默认取本脚本所在 tools/ 的上级，不依赖当前工作目录）：
+  python3 tools/gen_panel_i18n.py                    # 检查 + 写入
+  python3 tools/gen_panel_i18n.py --check            # 只检查，不写文件
+  python3 tools/gen_panel_i18n.py --repo /path/to/repo
+  python3 tools/gen_panel_i18n.py --panel /path/to/panel.html
+退出码：0 = 覆盖齐全；1 = 有缺译；2 = 结构问题（含找不到 panel.html）。
 """
+import argparse
 import json
 import os
 import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DELIV = os.path.dirname(HERE)
-REPO = os.path.abspath(os.path.join(DELIV, "..", "..", "work", "rf4_server_simulator"))
-PANEL = os.path.join(REPO, "cmd", "launcher", "panel.html")
+# tools/ 的上一级就是仓库根；脚本在哪个体检目录里跑都成立，不硬编码任何盘符。
+DEFAULT_REPO = os.path.dirname(HERE)
 
 sys.path.insert(0, HERE)
 from panel_en import EN_BY_ZH, RULES  # noqa: E402
@@ -163,9 +166,25 @@ def corpus():
     return blob, runs
 
 
+def parse_args(argv):
+    ap = argparse.ArgumentParser(
+        description="把 9500 控制面板接进语言层：生成并注入 panel.html 的字典块（幂等）。")
+    ap.add_argument("--repo", default=DEFAULT_REPO,
+                    help="仓库根目录（默认：本脚本所在 tools/ 的上级）")
+    ap.add_argument("--panel", default=None,
+                    help="panel.html 路径（默认 <repo>/cmd/launcher/panel.html）")
+    ap.add_argument("--check", action="store_true", help="只检查覆盖，不写文件")
+    return ap.parse_args(argv)
+
+
 def main():
-    check_only = "--check" in sys.argv
-    src = open(PANEL, encoding="utf-8").read()
+    args = parse_args(sys.argv[1:])
+    panel = args.panel or os.path.join(args.repo, "cmd", "launcher", "panel.html")
+    if not os.path.isfile(panel):
+        print("STRUCT: 找不到 panel.html：%s（用 --repo/--panel 指定仓库根）" % panel,
+              file=sys.stderr)
+        return 2
+    src = open(panel, encoding="utf-8").read()
     body = masked(src)
     blob, known = corpus()
     missing = []
@@ -210,14 +229,14 @@ def main():
     if missing:
         print("先补 tools/panel_en.py 再生成（%d 条未覆盖）。" % len(missing))
         return 1
-    if check_only:
-        print("check ok（未写文件）")
+    if args.check:
+        print("check ok（未写文件）：%s" % panel)
         return 0
     if new != src:
-        open(PANEL, "w", encoding="utf-8").write(new)
-        print("panel.html 已更新：%d bytes" % len(new))
+        open(panel, "w", encoding="utf-8").write(new)
+        print("panel.html 已更新：%d bytes（%s）" % (len(new), panel))
     else:
-        print("panel.html 无变化（幂等）")
+        print("panel.html 无变化（幂等）：%s" % panel)
     return 0
 
 

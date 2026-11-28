@@ -152,26 +152,49 @@ def free_port():
     return p
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """不跟随任何 3xx：路由差集要观测服务端真实状态码。
+
+    原有实现用 urlopen 默认 opener，会**自动跟随** 301/302/307/308；
+    /admin 的期望是 307（http.Redirect → /admin/），跟随之后拿到的是
+    /admin/ 的 200/503，路由差集必然报 want=307 got=200。
+    redirect_request 返回 None 让 urllib 抛 HTTPError，于是状态码与
+    Location 头都能原样读到。
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D401
+        return None
+
+
+OPENER = urllib.request.build_opener(_NoRedirect())
+
+
 def http_get(url, cookie=None, timeout=15):
     req = urllib.request.Request(url, method="GET")
     if cookie:
         req.add_header("Cookie", cookie)
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with OPENER.open(req, timeout=timeout) as r:
             return r.status, dict(r.headers), r.read().decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         return e.code, dict(e.headers), e.read().decode("utf-8", "replace")
 
 
-def http_any(method, url, timeout=15):
+def http_any_full(method, url, timeout=15):
+    """返回 (status, headers)。3xx 原样返回，Location 可读。"""
     req = urllib.request.Request(url, method=method)
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.status
+        with OPENER.open(req, timeout=timeout) as r:
+            return r.status, dict(r.headers)
     except urllib.error.HTTPError as e:
-        return e.code
+        return e.code, dict(e.headers)
     except Exception:
-        return None
+        return None, {}
+
+
+def http_any(method, url, timeout=15):
+    status, _headers = http_any_full(method, url, timeout=timeout)
+    return status
 
 
 def render(url, cookie, port, timeout=40):

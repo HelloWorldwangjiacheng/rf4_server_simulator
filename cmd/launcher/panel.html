@@ -913,7 +913,19 @@ body.in-admin #backHome{display:inline-flex}
     ["^登录失败（HTTP (.+?)）$", "Sign-in failed (HTTP {0})"],
     ["^(.+?)/(.+?) 运行中$", "{0}/{1} running"],
     ["^最近一次出错：(.+)$", "Last error: {0}"],
-    ["^已运行 (.+)$", "Running for {0}"]
+    ["^已运行 (.+)$", "Running for {0}"],
+    ["^一切就绪，可以开始游戏了。已稳定运行 刚刚启动。$", "All set: you can start the game. Running stable since just now."],
+    ["^一切就绪，可以开始游戏了。已稳定运行 (.+?) 分 (.+?) 秒。$", "All set: you can start the game. Running stable for {0} min {1} s."],
+    ["^一切就绪，可以开始游戏了。已稳定运行 (.+?) 分钟。$", "All set: you can start the game. Running stable for {0} min."],
+    ["^一切就绪，可以开始游戏了。已稳定运行 (.+?) 小时 (.+?) 分。$", "All set: you can start the game. Running stable for {0} h {1} min."],
+    ["^一切就绪，可以开始游戏了。已稳定运行 (.+?) 天 (.+?) 小时。$", "All set: you can start the game. Running stable for {0} d {1} h."],
+    ["^一切就绪，可以开始游戏了。已稳定运行 (.+)。$", "All set: you can start the game. Running stable for {0}."],
+    ["^构建：(.+?) · 来源：(.+)$", "Build: {0} · Source: {1}"],
+    ["^(.+?) · 来源：(.+)$", "{0} · Source: {1}"],
+    ["^(.+?) 件 · 档案 (.+)$", "{0} items · profiles {1}"],
+    ["^你正在使用最新版本。 检查于 (.+)$", "You are using the latest version. Checked {0}"],
+    ["^更新服务已连接。 检查于 (.+)$", "Update server connected. Checked {0}"],
+    ["^有新的(.+?)可以下载；当前版本也可以继续使用。 检查于 (.+)$", "A new {0} is available; you can keep using the current version. Checked {1}"]
   ];
   if (L !== "en") {
     window.__rf4Tr = function (s) { return s; };

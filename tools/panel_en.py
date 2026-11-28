@@ -281,4 +281,34 @@ RULES = [
     (r"^(.+?)/(.+?) 运行中$", "{0}/{1} running"),
     (r"^最近一次出错：(.+)$", "Last error: {0}"),
     (r"^已运行 (.+)$", "Running for {0}"),
+
+    # ---- rf4-i18n-02：JS 拼接出来的整句（只追加在表尾，不重排既有规则） ----
+    # 根因：tr() 只匹配「整节点文本」，下面这些句子由 panel.html 的多段拼接而成，
+    # 既不是字典键也命中不了任何锚定句首/句尾的规则，于是整条漏翻。
+    # 这里按「拼接后的完整句子」补锚定规则；既有规则一条未改、顺序未动，
+    # 顺序回归见 tools/check_rules_order.py。
+    # H1 英雄区「一切就绪…已稳定运行 <时长>。」（panel.html:1334，时长来自 humanUptime）
+    (r"^一切就绪，可以开始游戏了。已稳定运行 刚刚启动。$",
+     "All set: you can start the game. Running stable since just now."),
+    (r"^一切就绪，可以开始游戏了。已稳定运行 (.+?) 分 (.+?) 秒。$",
+     "All set: you can start the game. Running stable for {0} min {1} s."),
+    (r"^一切就绪，可以开始游戏了。已稳定运行 (.+?) 分钟。$",
+     "All set: you can start the game. Running stable for {0} min."),
+    (r"^一切就绪，可以开始游戏了。已稳定运行 (.+?) 小时 (.+?) 分。$",
+     "All set: you can start the game. Running stable for {0} h {1} min."),
+    (r"^一切就绪，可以开始游戏了。已稳定运行 (.+?) 天 (.+?) 小时。$",
+     "All set: you can start the game. Running stable for {0} d {1} h."),
+    (r"^一切就绪，可以开始游戏了。已稳定运行 (.+)。$",
+     "All set: you can start the game. Running stable for {0}."),
+    # H2 构建身份「构建：<version> · 来源：<source>」与其无前缀形态
+    # （panel.html:1153 的表格行，以及 1404 的 buildText() 返回值）
+    (r"^构建：(.+?) · 来源：(.+)$", "Build: {0} · Source: {1}"),
+    (r"^(.+?) · 来源：(.+)$", "{0} · Source: {1}"),
+    # H3 物品目录「<n> 件 · 档案 <m>」（panel.html:1113；既有规则只锚句尾，尾部还挂档案数）
+    (r"^(.+?) 件 · 档案 (.+)$", "{0} items · profiles {1}"),
+    # H4/H5 更新提示 noteText 被拼上「 检查于 <time>」之后的完整句子（panel.html:1464–1466）
+    (r"^你正在使用最新版本。 检查于 (.+)$", "You are using the latest version. Checked {0}"),
+    (r"^更新服务已连接。 检查于 (.+)$", "Update server connected. Checked {0}"),
+    (r"^有新的(.+?)可以下载；当前版本也可以继续使用。 检查于 (.+)$",
+     "A new {0} is available; you can keep using the current version. Checked {1}"),
 ]
