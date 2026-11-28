@@ -39,6 +39,14 @@ dir launcher.exe
 
 ## 3. 起服务并确认就绪
 
+> **fresh clone 里没有 `config.yaml`**：它被 `.gitignore` 排除，仓库里只有 `config.example.yaml`
+> （首行就写着「复制为 config.yaml」）。首次运行先复制一份；已有可用 `config.yaml` 就直接用，
+> 跳过这步——别把手上能用的那份覆盖掉。
+
+```bat
+copy config.example.yaml config.yaml
+```
+
 ```bat
 launcher.exe -config config.yaml
 ```
