@@ -912,7 +912,7 @@ body.in-admin #backHome{display:inline-flex}
     ["^(.+?) 天 (.+?) 小时$", "{0} d {1} h"],
     ["^登录失败（HTTP (.+?)）$", "Sign-in failed (HTTP {0})"],
     ["^(.+?)/(.+?) 运行中$", "{0}/{1} running"],
-    ["^最近一次出错：(.+)$", "Last error: {0}"],
+    ["^最近一次出错：(.+)$", "Last error: {0}", 1],
     ["^已运行 (.+)$", "Running for {0}"],
     ["^一切就绪，可以开始游戏了。已稳定运行 刚刚启动。$", "All set: you can start the game. Running stable since just now."],
     ["^一切就绪，可以开始游戏了。已稳定运行 (.+?) 分 (.+?) 秒。$", "All set: you can start the game. Running stable for {0} min {1} s."],
@@ -931,7 +931,7 @@ body.in-admin #backHome{display:inline-flex}
     window.__rf4Tr = function (s) { return s; };
     return;
   }
-  var compiled = RULES.map(function (r) { return [new RegExp(r[0]), r[1]]; });
+  var compiled = RULES.map(function (r) { return [new RegExp(r[0]), r[1], r[2]]; });
   var PUNCT = { "。": ".", "、": ", ", "，": ", ", "：": ": ", "；": "; ", "！": "!", "？": "?", "（": " (", "）": ")", "「": '"', "」": '"' };
 
   function fill(tpl, m) {
@@ -962,7 +962,11 @@ body.in-admin #backHome{display:inline-flex}
     }
     for (var i = 0; i < compiled.length; i++) {
       var m = compiled[i][0].exec(trimmed);
-      if (m) { return polysh(t.replace(trimmed, function () { return fill(compiled[i][1], m); })); }
+      if (m) {
+        var out = t.replace(trimmed, function () { return fill(compiled[i][1], m); });
+        // r[2] = 捕获组是服务端原文：只翻前缀，正文逐字保留，不二次 polysh。
+        return compiled[i][2] ? out : polysh(out);
+      }
     }
     if (Object.prototype.hasOwnProperty.call(PUNCT, trimmed)) {
       return t.replace(trimmed, function () { return PUNCT[trimmed]; });

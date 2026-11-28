@@ -259,6 +259,15 @@ EN_BY_ZH = {
 }
 
 # 带插值的动态句：正则 → 英文模板（{0}/{1} 为捕获组）。
+#
+# RAW_CAPTURE_PATTERNS 里的规则，捕获组是服务端原文（last_error、日志正文），
+# 只翻前缀标签，**不再拿捕获组去 polysh 片段字典里二次替换**：
+# 以前 en 页会把「最近一次出错：游戏逻辑」翻成「Last error: Game logic」，
+# 等于改写服务器报给用户的数据。
+RAW_CAPTURE_PATTERNS = {
+    r"^最近一次出错：(.+)$",
+}
+
 RULES = [
     (r"^当前版本过旧，建议尽快升级到 (.+)$", "This version is old; upgrade to {0} soon"),
     (r"^新版本 (.+) 可以下载了$", "Version {0} is now available"),

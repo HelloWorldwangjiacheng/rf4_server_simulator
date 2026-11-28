@@ -30,7 +30,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_REPO = os.path.dirname(HERE)
 
 sys.path.insert(0, HERE)
-from panel_en import EN_BY_ZH, RULES  # noqa: E402
+from panel_en import EN_BY_ZH, RULES, RAW_CAPTURE_PATTERNS  # noqa: E402
 
 CJK_CLASS = "\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef"
 CJK_RUN = re.compile(r"[%s]+" % "".join(
@@ -55,7 +55,7 @@ ENGINE = r"""<script>window.RF4_LANG="zh";</script>
     window.__rf4Tr = function (s) { return s; };
     return;
   }
-  var compiled = RULES.map(function (r) { return [new RegExp(r[0]), r[1]]; });
+  var compiled = RULES.map(function (r) { return [new RegExp(r[0]), r[1], r[2]]; });
   var PUNCT = { "。": ".", "、": ", ", "，": ", ", "：": ": ", "；": "; ", "！": "!", "？": "?", "（": " (", "）": ")", "「": '"', "」": '"' };
 
   function fill(tpl, m) {
@@ -86,7 +86,11 @@ ENGINE = r"""<script>window.RF4_LANG="zh";</script>
     }
     for (var i = 0; i < compiled.length; i++) {
       var m = compiled[i][0].exec(trimmed);
-      if (m) { return polysh(t.replace(trimmed, function () { return fill(compiled[i][1], m); })); }
+      if (m) {
+        var out = t.replace(trimmed, function () { return fill(compiled[i][1], m); });
+        // r[2] = 捕获组是服务端原文：只翻前缀，正文逐字保留，不二次 polysh。
+        return compiled[i][2] ? out : polysh(out);
+      }
     }
     if (Object.prototype.hasOwnProperty.call(PUNCT, trimmed)) {
       return t.replace(trimmed, function () { return PUNCT[trimmed]; });
@@ -205,7 +209,13 @@ def main():
 
     data = ENGINE
     data = data.replace("__MAP__", json.dumps(EN_BY_ZH, ensure_ascii=False, sort_keys=True, indent=2))
-    rules = ",\n    ".join("[%s, %s]" % (json.dumps(p, ensure_ascii=False), json.dumps(r, ensure_ascii=False)) for p, r in RULES)
+    rules = ",\n    ".join(
+        "[%s, %s%s]" % (
+            json.dumps(p, ensure_ascii=False), json.dumps(r, ensure_ascii=False),
+            ", 1" if p in RAW_CAPTURE_PATTERNS else "",
+        )
+        for p, r in RULES
+    )
     data = data.replace("__RULES__", "[\n    " + rules + "\n  ]")
     block = START + "\n" + data + "\n" + END
 
